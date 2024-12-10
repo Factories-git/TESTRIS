@@ -235,7 +235,9 @@ def create_board(set_position):
 def draw_board(screen, board):
     for y in range(BOARD_HEIGHT):
         for x in range(BOARD_WIDTH):
-            pygame.draw.rect(screen, board[y][x],(SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),0)
+            pygame.draw.rect(screen, board[y][x],
+                             (SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                             0)
     pygame.draw.rect(screen, Color.GRAY, (SCREEN_START_X, SCREEN_START_Y, PLAY_WIDTH, PLAY_HEIGHT), 5)
 
 
@@ -273,28 +275,34 @@ def create_block_queue():
 
 
 def clear_line(board, set_positions):
-    count = 0 #제거된 줄의 개수
-    idx = -float('inf') #마지막으로 제거된 위치 y
-    for i in range(len(board)-1, -1, -1):
+    count = 0  #제거된 줄의 개수
+    last_idx = 0  #마지막으로 제거된 위치 y
+    start_idx = -float('inf')  #마지막으로 제거된 위치 y
+    deletes = list()
+    down_ = list()
+    for i in range(len(board) - 1, -1, -1):
         line = board[i]
-        deletes = set()
         if Color.BLACK not in line:
             count += 1
-            idx = max(idx,i)
+            last_idx = i
+            start_idx = max(start_idx, i)
+            deletes.append(i)
             for j in range(len(line)):
                 try:
-                    deletes.add(i)
                     del set_positions[j, i]
                 except KeyError:
                     continue
-    if count > 0: #제거된 라인이 존재한다면
-        for x, y in sorted(set_positions, key=lambda x : -x[1]):
-            if y < idx or y+1 in deletes:
+    down_ = [i for i in range(20) if i not in deletes]
+    print(down_, deletes)
+    if count > 0:  #제거된 라인이 존재한다면
+        for x, y in sorted(set_positions, key=lambda x: -x[1]):
+            if y in down_:
+                print(y)
                 new_pos = (x, y + count)
-                if new_pos[1] > 19:
+                if y > 19:
                     new_pos = (x, 19)
                 set_positions[new_pos] = set_positions.pop((x, y))
-                print(set_positions,idx,count)
+
 
 def game(screen):
     is_run = True
@@ -348,7 +356,7 @@ def game(screen):
                 if event.key == pygame.K_c:
                     pass
         block_position = get_block_position(current_block)
-        for x,y in block_position:
+        for x, y in block_position:
             if y > -1:
                 board[y][x] = current_block.color
 
@@ -361,7 +369,6 @@ def game(screen):
                 block_queue = create_block_queue()
             #라인 제거
             clear_line(board, set_positions)
-
 
         screen.fill(Color.BLACK)
         draw_board(screen, board)
