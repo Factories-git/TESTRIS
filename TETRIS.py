@@ -293,15 +293,23 @@ def clear_line(board, set_positions):
                 except KeyError:
                     continue
     down_ = [i for i in range(20) if i not in deletes]
-    print(down_, deletes)
+    is_block = []
+    for i in range(len(board)):
+        if Color.BLACK in board[i]:
+            is_block.append(i)
+    print(is_block)
+    print(down_)
     if count > 0:  #제거된 라인이 존재한다면
         for x, y in sorted(set_positions, key=lambda x: -x[1]):
-            if y in down_:
-                print(y)
-                new_pos = (x, y + count)
-                if y > 19:
+            if y > last_idx or y in down_:
+                print(x,y)
+                new_pos = (x, y + (20 - min(deletes)))
+                print(new_pos)
+                if new_pos[1] > 19:
                     new_pos = (x, 19)
+                print(new_pos)
                 set_positions[new_pos] = set_positions.pop((x, y))
+                print()
 
 
 def game(screen):
