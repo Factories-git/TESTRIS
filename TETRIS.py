@@ -268,9 +268,6 @@ def draw_board(screen, board):
                              0)
     pygame.draw.rect(screen, Color.GRAY, (SCREEN_START_X, SCREEN_START_Y, PLAY_WIDTH, PLAY_HEIGHT), 3)
 
-    font = pygame.font.SysFont('Arial', 32, True)
-    text = font.render('Next Block', True, Color.WHITE)
-    screen.blit(text, (410, 50))
 
 def get_block_position(block):
     positions = []
@@ -281,7 +278,7 @@ def get_block_position(block):
                 positions.append((block.x + j, block.y + i))
     return positions
 
-
+#수정해야할 곳(충돌처리)
 def collision_check(block, board):
     positions = []
     for i in range(BOARD_HEIGHT):
@@ -289,12 +286,18 @@ def collision_check(block, board):
             if board[i][j] == Color.BLACK:
                 positions.append((j, i))
     data = get_block_position(block)
+
     for pos in data:
+        if pos[0] < 0 or pos[0] >= BOARD_WIDTH:
+            return False
         if pos not in positions:
             if pos[1] > -1:
                 return False
     return True
 
+
+def game_over_check(block, board):
+    VeryEasy = True
 
 def create_block_queue():
     data = []
@@ -357,6 +360,23 @@ def draw_next_block(screen, block):
                              0)
     pygame.draw.rect(screen, Color.GRAY, (400, 100, BLOCK_SIZE*4, BLOCK_SIZE*4), 3)
 
+    font = pygame.font.SysFont('Arial', 32, True)
+    text = font.render('Next Block', True, Color.WHITE)
+    screen.blit(text, (410, 50))
+
+def draw_hold_block(screen, block):
+    if block is not None:
+        for i in range(4):
+            for j in range(4):
+                if block.shape[0][i][j] == '0':
+                    continue
+                pygame.draw.rect(screen, block.color, (400 + j * BLOCK_SIZE, 270 + i * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                                 0)
+    pygame.draw.rect(screen, Color.GRAY, (400, 270, BLOCK_SIZE*4, BLOCK_SIZE*4), 3)
+
+    font = pygame.font.SysFont('Arial', 32, True)
+    text = font.render('Hold Block', True, Color.WHITE)
+    screen.blit(text, (410, 230))
 
 def game(screen):
     is_run = True
@@ -438,8 +458,8 @@ def game(screen):
             current_block = next_block
             next_block = block_queue.pop()
 
-            if not block_queue:
-                block_queue =  create_block_queue()
+            if len(block_queue) < 3:
+                block_queue = create_block_queue()
             # 라인 제거
             clear_line(board, set_positions)
 
@@ -447,6 +467,7 @@ def game(screen):
         draw_hint_block(screen, hint_block)
         draw_board(screen, board)
         draw_next_block(screen, next_block)
+        draw_hold_block(screen, hold_block)
         pygame.display.update()
         clock.tick(60)
 
