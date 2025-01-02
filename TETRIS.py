@@ -233,6 +233,10 @@ class Block:
         self.color = blocks_color[shape]
         self.idx = shape
 
+    def init_pos(self):
+        self.x = 4
+        self.y = -4
+        self.rotation = 0
     def copy(self):
         new_block = Block(0, 0, 0)
         new_block.shape = self.shape.copy()
@@ -337,12 +341,11 @@ def create_hint_block(block, board):
 
 
 def draw_hint_block(screen, block):
-    block_position = get_block_position(block)
-    board = [[Color.BLACK for i in range(BOARD_WIDTH)] for _ in range(BOARD_HEIGHT)]
-    for x, y in block_position:
-        if y > -1:
-            board[y][x] = block.color
-    draw_board(screen, board)
+    for i in range(4):
+        for j in range(4):
+            if block.shape[block.rotation % 4][i][j] == '0':
+                continue
+            pygame.draw.rect(screen, block.color, (SCREEN_START_X + (block.x + j) * BLOCK_SIZE, SCREEN_START_Y + (block.y + i) * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE), 0)
 
 
 def draw_next_block(screen, block):
@@ -364,6 +367,9 @@ def game(screen):
     next_block = block_queue.pop()
     hint_block = current_block.copy()
     hint_block.color = hint_color[hint_block.idx]
+    hold_block = None
+    hold_able = True
+
     set_positions = dict()
     drop_time = 0
 
@@ -407,7 +413,17 @@ def game(screen):
                     current_block.y -= 1
                     is_fixable = True
                 if event.key == pygame.K_c:
-                    pass
+                    if hold_block is None:
+                        hold_block = current_block
+                        hold_block.init_pos()
+                        current_block = next_block
+                        next_block = block_queue.pop()
+                        hold_able = False
+                    elif hold_able:
+                        current_block, hold_block = hold_block, current_block
+                        hold_block.init_pos()
+                        hold_able = False
+
 
         hint_block = create_hint_block(current_block, board)
         block_position = get_block_position(current_block)
@@ -416,6 +432,7 @@ def game(screen):
                 board[y][x] = current_block.color
 
         if is_fixable:
+            hold_able = True
             for pos in block_position:
                 set_positions[pos] = current_block.color
             current_block = next_block
