@@ -445,7 +445,6 @@ def game(screen):
                         current_block, hold_block = hold_block, current_block
                         hold_block.init_pos()
                         hold_able = False
-        print(current_block.y)
         if key_input_time > KEY_INPUT_TIME:
             key_input_time = 0
             key_pressed = pygame.key.get_pressed()
@@ -497,3 +496,4 @@ if __name__ == '__main__':
     pygame.display.set_caption('PYTRIS')
     game(_screen)
     pygame.quit()
+    exit("게임 오버!")
