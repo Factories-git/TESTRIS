@@ -510,3 +510,5 @@ if __name__ == '__main__':
     pygame.quit()
     max_ = max(max_, score)
     exit("게임 오버!")
+with open("max.pkl", 'wb') as file:
+    pickle.dump(max_, file)
