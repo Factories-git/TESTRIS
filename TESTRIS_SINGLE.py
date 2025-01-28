@@ -316,6 +316,7 @@ def create_block_queue(prev_data=None):
 
 
 def clear_line(board, set_positions):
+    global score
     count = 0  # 제거된 줄의 개수
     idx = 0  # 마지막으로 제거된 위치 y
     start_idx = -float('inf')  # 마지막으로 제거된 위치 y
@@ -339,6 +340,8 @@ def clear_line(board, set_positions):
                 if y < last_idx:
                     new_pos = (x, y + 1)
                     set_positions[new_pos] = set_positions.pop((x, y))
+    score += (count * 100)
+
 
 
 def create_hint_block(block, board):
@@ -389,7 +392,10 @@ def draw_hold_block(screen, block):
     text = font.render('Hold Block', True, Color.WHITE)
     screen.blit(text, (410, 230))
 
+    text = font.render(f"Score : {score}", True, Color.WHITE)
+    screen.blit(text, (0, 0))
 
+score = 0
 def game(screen):
     is_run = True
     clock = pygame.time.Clock()
