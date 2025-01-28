@@ -251,7 +251,23 @@
       <option name="project" value="LOCAL" />
       <updated>1738030190921</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Tetris">
+      <option name="closed" value="true" />
+      <created>1738060865172</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1738060865172</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Tetris">
+      <option name="closed" value="true" />
+      <created>1738060950661</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1738060950661</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
