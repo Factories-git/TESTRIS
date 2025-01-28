@@ -9,14 +9,14 @@ class Color:
     ORANGE = (255, 94, 0)
     SKYBLUE = (0, 216, 255)
     YELLOW = (225, 228, 0)
-    BLUE = (225, 228, 0)
+    BLUE = (3, 7, 252)
     HINT_RED = (205, 0, 0)
     HINT_GREEN = (0, 169, 0)
     HINT_PINK = (205, 0, 171)
     HINT_ORANGE = (205, 44, 0)
     HINT_SKYBLUE = (0, 166, 205)
     HINT_YELLOW = (175, 178, 0)
-    HINT_BLUE = (175, 178, 0)
+    HINT_BLUE = (3, 7, 202)
 
     WHITE = (255, 255, 255)
     BLACK = (0, 0, 0)
@@ -220,9 +220,8 @@ blocks_info = [
         ],
     ]  # 역번
 ]
-hint_color = [Color.HINT_RED, Color.HINT_GREEN, Color.HINT_PINK, Color.HINT_ORANGE, Color.HINT_SKYBLUE,
-              Color.HINT_YELLOW, Color.HINT_BLUE]
-blocks_color = [Color.RED, Color.GREEN, Color.PINK, Color.ORANGE, Color.SKYBLUE, Color.YELLOW, Color.BLUE]
+hint_color = [Color.HINT_SKYBLUE, Color.HINT_YELLOW, Color.HINT_BLUE, Color.HINT_ORANGE, Color.HINT_PINK, Color.HINT_GREEN, Color.HINT_RED]
+blocks_color = [Color.SKYBLUE, Color.YELLOW, Color.BLUE, Color.ORANGE, Color.PINK, Color.GREEN, Color.RED]
 
 
 class Block:
