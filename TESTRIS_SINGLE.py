@@ -1,6 +1,10 @@
+import pickle
 import pygame
 import random
 
+with open("max.pkl", 'rb') as file:
+    max_ = pickle.load(file)
+print(max_)
 
 class Color:
     RED = (255, 36, 36)
@@ -394,6 +398,9 @@ def draw_hold_block(screen, block):
     text = font.render(f"Score : {score}", True, Color.WHITE)
     screen.blit(text, (0, 0))
 
+    text = font.render(f"Best Score : {max_}", True, Color.WHITE)
+    screen.blit(text, (0, 20))
+
 score = 0
 def game(screen):
     is_run = True
@@ -501,4 +508,5 @@ if __name__ == '__main__':
     pygame.display.set_caption('PYTRIS')
     game(_screen)
     pygame.quit()
+    max_ = max(max_, score)
     exit("게임 오버!")
