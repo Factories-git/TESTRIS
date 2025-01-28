@@ -4,7 +4,7 @@ import random
 
 with open("max.pkl", 'rb') as file:
     max_ = pickle.load(file)
-print(max_)
+
 
 class Color:
     RED = (255, 36, 36)
