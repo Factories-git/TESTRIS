@@ -6,7 +6,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6faed23b-96d0-4710-bd4c-e94285ab6b78" name="변경" comment="Tetris">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/TESTRIS_SINGLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/TESTRIS_SINGLE.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -267,7 +266,23 @@
       <option name="project" value="LOCAL" />
       <updated>1738060950661</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="Tetris">
+      <option name="closed" value="true" />
+      <created>1738062539873</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1738062539873</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Tetris">
+      <option name="closed" value="true" />
+      <created>1738062557008</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1738062557008</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">
