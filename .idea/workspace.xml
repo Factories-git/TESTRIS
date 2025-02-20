@@ -6,6 +6,8 @@
   <component name="ChangeListManager">
     <list default="true" id="6faed23b-96d0-4710-bd4c-e94285ab6b78" name="변경" comment="Tetris">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TESTRIS_SINGLE.py" beforeDir="false" afterPath="$PROJECT_DIR$/TESTRIS_SINGLE.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/TETRIS.py" beforeDir="false" afterPath="$PROJECT_DIR$/TETRIS.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -64,7 +66,7 @@
       <recent name="C:\Users\yujs-k\Algorithm\TESTRIS" />
     </key>
   </component>
-  <component name="RunManager" selected="Python.TESTRIS_SINGLE">
+  <component name="RunManager" selected="Python.TETRIS (1)">
     <configuration name="TESTRIS_SINGLE" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="TESTRIS" />
       <option name="ENV_FILES" value="" />
@@ -155,8 +157,8 @@
     </configuration>
     <recent_temporary>
       <list>
-        <item itemvalue="Python.TESTRIS_SINGLE" />
         <item itemvalue="Python.TETRIS (1)" />
+        <item itemvalue="Python.TESTRIS_SINGLE" />
         <item itemvalue="Python.test" />
         <item itemvalue="Python.TETRIS" />
       </list>
@@ -282,7 +284,15 @@
       <option name="project" value="LOCAL" />
       <updated>1738062557008</updated>
     </task>
-    <option name="localTasksCounter" value="14" />
+    <task id="LOCAL-00014" summary="Tetris">
+      <option name="closed" value="true" />
+      <created>1739436295559</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1739436295559</updated>
+    </task>
+    <option name="localTasksCounter" value="15" />
     <servers />
   </component>
   <component name="VcsManagerConfiguration">

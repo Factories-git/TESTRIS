@@ -224,7 +224,8 @@ blocks_info = [
         ],
     ]  # 역번
 ]
-hint_color = [Color.HINT_SKYBLUE, Color.HINT_YELLOW, Color.HINT_BLUE, Color.HINT_ORANGE, Color.HINT_PINK, Color.HINT_GREEN, Color.HINT_RED]
+hint_color = [Color.HINT_SKYBLUE, Color.HINT_YELLOW, Color.HINT_BLUE, Color.HINT_ORANGE, Color.HINT_PINK,
+              Color.HINT_GREEN, Color.HINT_RED]
 blocks_color = [Color.SKYBLUE, Color.YELLOW, Color.BLUE, Color.ORANGE, Color.PINK, Color.GREEN, Color.RED]
 
 
@@ -346,7 +347,6 @@ def clear_line(board, set_positions):
     score += (count * 100)
 
 
-
 def create_hint_block(block, board):
     hint_block = block.copy()
     hint_block.color = hint_color[hint_block.idx]
@@ -362,8 +362,9 @@ def draw_hint_block(screen, block):
             if block.shape[block.rotation % 4][i][j] == '0':
                 continue
             pygame.draw.rect(screen, block.color, (
-            SCREEN_START_X + (block.x + j - 2) * BLOCK_SIZE, SCREEN_START_Y + (block.y + i - 4) * BLOCK_SIZE, BLOCK_SIZE,
-            BLOCK_SIZE), 0)
+                SCREEN_START_X + (block.x + j - 2) * BLOCK_SIZE, SCREEN_START_Y + (block.y + i - 4) * BLOCK_SIZE,
+                BLOCK_SIZE,
+                BLOCK_SIZE), 0)
 
 
 def draw_next_block(screen, block):
@@ -401,7 +402,10 @@ def draw_hold_block(screen, block):
     text = font.render(f"Best Score : {max_}", True, Color.WHITE)
     screen.blit(text, (0, 20))
 
+
 score = 0
+
+
 def game(screen):
     is_run = True
     clock = pygame.time.Clock()
@@ -415,8 +419,9 @@ def game(screen):
     hold_able = True
 
     set_positions = dict()
-    drop_time = 0 #시간 측정을 위한 변수
-    key_input_time = 0 #키 입력 시간을 측정하기 위한 변수
+    drop_time = 0  #시간 측정을 위한 변수
+    key_input_time = 0  #키 입력 시간을 측정하기 위한 변수
+    combo = 0
 
     while is_run:
         board = create_board(set_positions)
@@ -482,13 +487,13 @@ def game(screen):
         if is_fixable:
             hold_able = True
             for pos in block_position:
-                if game_over_check(pos): #겜 오버
+                if game_over_check(pos):  #겜 오버
                     is_run = False
-                set_positions[pos] = current_block.color #보드에 채움
-            current_block = next_block #바뀜
-            next_block = block_queue.pop() #담 블록
+                set_positions[pos] = current_block.color  #보드에 채움
+            current_block = next_block  #바뀜
+            next_block = block_queue.pop()  #담 블록
 
-            if len(block_queue) < 3: #넉넉하게 큐 뽑음
+            if len(block_queue) < 3:  #넉넉하게 큐 뽑음
                 block_queue = create_block_queue(block_queue)
             # 라인 제거
             clear_line(board, set_positions)

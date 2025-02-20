@@ -220,9 +220,9 @@ blocks_info = [
         ],
     ]  # 역번
 ]
-hint_color = [Color.HINT_RED, Color.HINT_GREEN, Color.HINT_PINK, Color.HINT_ORANGE, Color.HINT_SKYBLUE,
-              Color.HINT_YELLOW, Color.HINT_BLUE]
-blocks_color = [Color.RED, Color.GREEN, Color.PINK, Color.ORANGE, Color.SKYBLUE, Color.YELLOW, Color.BLUE]
+hint_color = [Color.HINT_SKYBLUE, Color.HINT_YELLOW, Color.HINT_BLUE, Color.HINT_ORANGE, Color.HINT_PINK,
+              Color.HINT_GREEN, Color.HINT_RED]
+blocks_color = [Color.SKYBLUE, Color.YELLOW, Color.BLUE, Color.ORANGE, Color.PINK, Color.GREEN, Color.RED]
 
 
 class Block:
@@ -265,8 +265,8 @@ def draw_board(screen, board):
             if board[y][x] is Color.BLACK:
                 continue
             pygame.draw.rect(screen, board[y][x],
-                             (SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
-                             0)
+                              (SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                              0)
     pygame.draw.rect(screen, Color.GRAY, (SCREEN_START_X, SCREEN_START_Y, PLAY_WIDTH, PLAY_HEIGHT), 3)
 
 
@@ -339,6 +339,7 @@ def clear_line(board, set_positions):
                 if y < last_idx:
                     new_pos = (x, y + 1)
                     set_positions[new_pos] = set_positions.pop((x, y))
+    return count
 
 
 def create_hint_block(block, board):
@@ -356,8 +357,9 @@ def draw_hint_block(screen, block):
             if block.shape[block.rotation % 4][i][j] == '0':
                 continue
             pygame.draw.rect(screen, block.color, (
-            SCREEN_START_X + (block.x + j - 2) * BLOCK_SIZE, SCREEN_START_Y + (block.y + i - 4) * BLOCK_SIZE, BLOCK_SIZE,
-            BLOCK_SIZE), 0)
+                SCREEN_START_X + (block.x + j - 2) * BLOCK_SIZE, SCREEN_START_Y + (block.y + i - 4) * BLOCK_SIZE,
+                BLOCK_SIZE,
+                BLOCK_SIZE), 0)
 
 
 def draw_next_block(screen, block):
@@ -390,6 +392,24 @@ def draw_hold_block(screen, block):
     screen.blit(text, (410, 230))
 
 
+def attack(attack_line, board, set_positions):
+    rdm = random.randrange(0, 10)
+    for _ in range(attack_line):
+        for i in range(20):
+            if all(i is Color.BLACK for i in board[i]):
+                continue
+            for j in range(len(board[i])):
+                new_pos = (j, i-1)
+                try:
+                    set_positions[new_pos] = set_positions.pop((j, i))
+                except:
+                    continue
+    for i in range(attack_line):
+        for j in range(10):
+            if j == rdm:
+                continue
+            set_positions[(j, i + (20 - i) - 1)] = Color.GRAY
+
 def game(screen):
     is_run = True
     clock = pygame.time.Clock()
@@ -403,8 +423,10 @@ def game(screen):
     hold_able = True
 
     set_positions = dict()
-    drop_time = 0 #시간 측정을 위한 변수
-    key_input_time = 0 #키 입력 시간을 측정하기 위한 변수
+    drop_time = 0  #시간 측정을 위한 변수
+    key_input_time = 0  #키 입력 시간을 측정하기 위한 변수
+    combo = 0  #콤보
+    attack_line_dict = {1: 0, 2: 1, 3: 2, 4: 4}
 
     while is_run:
         board = create_board(set_positions)
@@ -445,7 +467,6 @@ def game(screen):
                         current_block, hold_block = hold_block, current_block
                         hold_block.init_pos()
                         hold_able = False
-        print(current_block.y)
         if key_input_time > KEY_INPUT_TIME:
             key_input_time = 0
             key_pressed = pygame.key.get_pressed()
@@ -471,16 +492,24 @@ def game(screen):
         if is_fixable:
             hold_able = True
             for pos in block_position:
-                if game_over_check(pos): #겜 오버
+                if game_over_check(pos):  #겜 오버
                     is_run = False
-                set_positions[pos] = current_block.color #보드에 채움
-            current_block = next_block #바뀜
-            next_block = block_queue.pop() #담 블록
+                set_positions[pos] = current_block.color  #보드에 채움
+            current_block = next_block  #바뀜
+            next_block = block_queue.pop()  #담 블록
 
-            if len(block_queue) < 3: #넉넉하게 큐 뽑음
+            if len(block_queue) < 3:  #넉넉하게 큐 뽑음
                 block_queue = create_block_queue(block_queue)
             # 라인 제거
-            clear_line(board, set_positions)
+            count = clear_line(board, set_positions)
+            if count:
+                combo += 1
+                attack_line = attack_line_dict[count] + (combo - 1)
+                attack(attack_line, board, set_positions)
+                print(set_positions)
+                print(board[19][0])
+            else:
+                combo = 0
 
         screen.fill(Color.BLACK)
         draw_hint_block(screen, hint_block)
