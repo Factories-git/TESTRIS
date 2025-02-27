@@ -395,17 +395,17 @@ def draw_hold_block(screen, block):
 def attack(attack_line, board, set_positions):
     rdm = random.randrange(0, 10)
     for _ in range(attack_line):
-        for i in range(20):
+        for i in range(BOARD_HEIGHT):
             if all(i is Color.BLACK for i in board[i]):
                 continue
-            for j in range(len(board[i])):
+            for j in range(BOARD_WIDTH):
                 new_pos = (j, i-1)
                 try:
                     set_positions[new_pos] = set_positions.pop((j, i))
                 except KeyError:
                     continue
     for i in range(attack_line):
-        for j in range(10):
+        for j in range(BOARD_WIDTH):
             if j == rdm:
                 continue
             set_positions[(j, (20 - i) - 1)] = Color.GRAY
