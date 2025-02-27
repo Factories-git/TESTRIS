@@ -506,6 +506,8 @@ def game(screen):
                 combo += 1
                 attack_line = attack_line_dict[count] + (combo - 1)
                 attack(attack_line, board, set_positions)
+                if game_over_check(pos):  #겜 오버
+                    is_run = False
             else:
                 combo = 0
 
