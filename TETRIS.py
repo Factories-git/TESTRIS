@@ -402,7 +402,7 @@ def attack(attack_line, board, set_positions):
                 new_pos = (j, i-1)
                 try:
                     set_positions[new_pos] = set_positions.pop((j, i))
-                except:
+                except KeyError:
                     continue
     for i in range(attack_line):
         for j in range(10):
