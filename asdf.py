@@ -415,6 +415,29 @@ def attack(attack_line, set_positions):
             set_positions[(j, (20 - i) - 1)] = Color.GRAY
 
 
+def send(protocol, data):
+    send_data = dumps({'protocol': protocol, 'data': data}).encode('utf-8')
+    sock.sendto(send_data, target)
+
+
+def recv():
+    global other_board, is_connect, target
+    while True:
+        recv_data, tg = sock.recvfrom(8192)
+        target = tg
+        recv_data = loads(recv_data.decode('utf-8'))
+        protocol, data = recv_data['protocol'], recv_data['data']
+        if protocol == 'start':
+            is_connect = True
+        elif protocol == 'doing':
+            other_board = data['board']
+        elif protocol == 'garbage':
+            attack_line = data['attack_line']
+            attack(attack_line, set_positions)
+        elif protocol == 'die':
+            print('Winner')
+            sock.close()
+            break
 
 
 set_positions = dict()
@@ -533,31 +556,6 @@ def game(screen):
         draw_hold_block(screen, hold_block)
         pygame.display.update()
         clock.tick(60)
-
-
-def send(protocol, data):
-    send_data = dumps({'protocol': protocol, 'data': data}).encode('utf-8')
-    sock.sendto(send_data, target)
-
-
-def recv():
-    global other_board, is_connect, target
-    while True:
-        recv_data, tg = sock.recvfrom(8192)
-        target = tg
-        recv_data = loads(recv_data.decode('utf-8'))
-        protocol, data = recv_data['protocol'], recv_data['data']
-        if protocol == 'start':
-            is_connect = True
-        elif protocol == 'doing':
-            other_board = data['board']
-        elif protocol == 'garbage':
-            attack_line = data['attack_line']
-            attack(attack_line, set_positions)
-        elif protocol == 'die':
-            print('Winner')
-            sock.close()
-            break
 
 
 if __name__ == '__main__':

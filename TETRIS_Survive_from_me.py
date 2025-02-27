@@ -1,8 +1,5 @@
 import pygame
 import random
-from socket import socket, AF_INET, SOCK_DGRAM, gethostname, gethostbyname
-from threading import Thread
-from json import dumps, loads
 
 
 class Color:
@@ -262,16 +259,15 @@ def create_board(set_position):
     return board
 
 
-def draw_board(screen, board, player_no=1):
-    offset_x = 0 if player_no == 1 else 520
+def draw_board(screen, board):
     for y in range(BOARD_HEIGHT):
         for x in range(BOARD_WIDTH):
             if board[y][x] is Color.BLACK:
                 continue
             pygame.draw.rect(screen, board[y][x],
-                              (offset_x + SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
+                              (SCREEN_START_X + x * BLOCK_SIZE, SCREEN_START_Y + y * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE),
                               0)
-    pygame.draw.rect(screen, Color.GRAY, (offset_x + SCREEN_START_X, SCREEN_START_Y, PLAY_WIDTH, PLAY_HEIGHT), 3)
+    pygame.draw.rect(screen, Color.GRAY, (SCREEN_START_X, SCREEN_START_Y, PLAY_WIDTH, PLAY_HEIGHT), 3)
 
 
 def get_block_position(block):
@@ -396,13 +392,13 @@ def draw_hold_block(screen, block):
     screen.blit(text, (410, 230))
 
 
-def attack(attack_line, set_positions):
+def attack(attack_line, board, set_positions):
     rdm = random.randrange(0, 10)
     for _ in range(attack_line):
         for i in range(BOARD_HEIGHT):
+            if all(i is Color.BLACK for i in board[i]):
+                continue
             for j in range(BOARD_WIDTH):
-                if (j, i) not in set_positions:
-                    continue
                 new_pos = (j, i-1)
                 try:
                     set_positions[new_pos] = set_positions.pop((j, i))
@@ -414,14 +410,7 @@ def attack(attack_line, set_positions):
                 continue
             set_positions[(j, (20 - i) - 1)] = Color.GRAY
 
-
-
-
-set_positions = dict()
-
-
 def game(screen):
-    global other_board
     is_run = True
     clock = pygame.time.Clock()
     # 테트리스를 위한 변수
@@ -433,12 +422,11 @@ def game(screen):
     hold_block = None
     hold_able = True
 
+    set_positions = dict()
     drop_time = 0  #시간 측정을 위한 변수
     key_input_time = 0  #키 입력 시간을 측정하기 위한 변수
     combo = 0  #콤보
     attack_line_dict = {1: 0, 2: 1, 3: 2, 4: 4}
-
-    other_board = create_board(set_positions)
 
     while is_run:
         board = create_board(set_positions)
@@ -517,77 +505,23 @@ def game(screen):
             if count:
                 combo += 1
                 attack_line = attack_line_dict[count] + (combo - 1)
-                send('garbage', {'attack_line' : attack_line})
+                attack(attack_line, board, set_positions)
+                for pos in set_positions:
+                    if game_over_check(pos):  #겜 오버
+                        is_run = False
             else:
                 combo = 0
 
-            if is_run:
-                send('doing', {'board': board})
-            else:
-                send('die', {})
         screen.fill(Color.BLACK)
         draw_hint_block(screen, hint_block)
         draw_board(screen, board)
-        draw_board(screen, other_board, 2)
         draw_next_block(screen, next_block)
         draw_hold_block(screen, hold_block)
         pygame.display.update()
         clock.tick(60)
 
 
-def send(protocol, data):
-    send_data = dumps({'protocol': protocol, 'data': data}).encode('utf-8')
-    sock.sendto(send_data, target)
-
-
-def recv():
-    global other_board, is_connect, target
-    while True:
-        recv_data, tg = sock.recvfrom(8192)
-        target = tg
-        recv_data = loads(recv_data.decode('utf-8'))
-        protocol, data = recv_data['protocol'], recv_data['data']
-        if protocol == 'start':
-            is_connect = True
-        elif protocol == 'doing':
-            other_board = data['board']
-        elif protocol == 'garbage':
-            attack_line = data['attack_line']
-            attack(attack_line, set_positions)
-        elif protocol == 'die':
-            print('Winner')
-            sock.close()
-            break
-
-
 if __name__ == '__main__':
-    menu = int(input('[1]방만들기 [2]접속 [3]종료\n> '))
-    sock = socket(AF_INET, SOCK_DGRAM)
-    other_board = []
-    target = None
-    is_connect = False
-    if menu == 1:
-        hostname = gethostname()
-        host_ip = gethostbyname(hostname)
-        sock.bind((host_ip, 12345))
-        print(host_ip)
-        print('접속 대기중')
-        t = Thread(target=recv, args=())
-        t.daemon = True
-        t.start()
-        while not is_connect:
-            pass
-    elif menu == 2:
-        ip = input('아이피 주소 입력: ')
-        port = int(input('포트번호 입력: '))
-        target = (ip, port)
-        send('start', {})
-        t = Thread(target=recv, args=())
-        t.daemon = True
-        t.start()
-    else:
-        exit(0)
-
     pygame.init()
     _screen = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
     pygame.display.set_caption('PYTRIS')
