@@ -408,7 +408,7 @@ def attack(attack_line, board, set_positions):
         for j in range(10):
             if j == rdm:
                 continue
-            set_positions[(j, i + (20 - i) - 1)] = Color.GRAY
+            set_positions[(j, (20 - i) - 1)] = Color.GRAY
 
 def game(screen):
     is_run = True
@@ -506,8 +506,6 @@ def game(screen):
                 combo += 1
                 attack_line = attack_line_dict[count] + (combo - 1)
                 attack(attack_line, board, set_positions)
-                print(set_positions)
-                print(board[19][0])
             else:
                 combo = 0
 
